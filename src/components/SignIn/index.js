@@ -1,32 +1,38 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import React, { Component } from "react";
+import { withRouter, Link } from "react-router-dom";
+import { compose } from "recompose";
+import {
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBCard,
+  MDBCardBody,
+  MDBInput,
+  MDBBtn,
+  MDBIcon,
+  MDBModalFooter,
+} from "mdbreact";
 
-import { SignUpLink } from '../SignUp';
-import { PasswordForgetLink } from '../PasswordForget';
-import { withFirebase } from '../Firebase';
-import * as ROUTES from '../../constants/routes';
+import { withFirebase } from "../Firebase";
+import * as ROUTES from "../../constants/routes";
 
 const SignInPage = () => (
-  <div>
-    <h1>SignIn</h1>
+  <div style={{paddingBottom: 30, paddingTop: 30}}>
     <SignInForm />
-    <SignInGoogle />
-    <SignInFacebook />
-    <SignInTwitter />
-    <PasswordForgetLink />
-    <SignUpLink />
   </div>
 );
 
 const INITIAL_STATE = {
-  email: '',
-  password: '',
+  email: "",
+  password: "",
   error: null,
+  errorFb: null,
+  errorGoogle: null,
+  errorTwitter: null,
 };
 
 const ERROR_CODE_ACCOUNT_EXISTS =
-  'auth/account-exists-with-different-credential';
+  "auth/account-exists-with-different-credential";
 
 const ERROR_MSG_ACCOUNT_EXISTS = `
   An account with an E-Mail address to
@@ -42,7 +48,7 @@ class SignInFormBase extends Component {
     this.state = { ...INITIAL_STATE };
   }
 
-  onSubmit = event => {
+  onSubmit = (event) => {
     const { email, password } = this.state;
 
     this.props.firebase
@@ -51,59 +57,17 @@ class SignInFormBase extends Component {
         this.setState({ ...INITIAL_STATE });
         this.props.history.push(ROUTES.HOME);
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ error });
       });
 
     event.preventDefault();
   };
 
-  onChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  render() {
-    const { email, password, error } = this.state;
-
-    const isInvalid = password === '' || email === '';
-
-    return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <input
-          name="password"
-          value={password}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
-        <button disabled={isInvalid} type="submit">
-          Sign In
-        </button>
-
-        {error && <p>{error.message}</p>}
-      </form>
-    );
-  }
-}
-
-class SignInGoogleBase extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { error: null };
-  }
-
-  onSubmit = event => {
+  onSubmitGoogle = (event) => {
     this.props.firebase
       .doSignInWithGoogle()
-      .then(socialAuthUser => {
+      .then((socialAuthUser) => {
         // Create a user in your Firebase Realtime Database too
         return this.props.firebase.user(socialAuthUser.user.uid).set({
           username: socialAuthUser.user.displayName,
@@ -112,10 +76,10 @@ class SignInGoogleBase extends Component {
         });
       })
       .then(() => {
-        this.setState({ error: null });
+        this.setState({ errorGoogle: null });
         this.props.history.push(ROUTES.HOME);
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
           error.message = ERROR_MSG_ACCOUNT_EXISTS;
         }
@@ -126,30 +90,10 @@ class SignInGoogleBase extends Component {
     event.preventDefault();
   };
 
-  render() {
-    const { error } = this.state;
-
-    return (
-      <form onSubmit={this.onSubmit}>
-        <button type="submit">Sign In with Google</button>
-
-        {error && <p>{error.message}</p>}
-      </form>
-    );
-  }
-}
-
-class SignInFacebookBase extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { error: null };
-  }
-
-  onSubmit = event => {
+  onSubmitFb = (event) => {
     this.props.firebase
       .doSignInWithFacebook()
-      .then(socialAuthUser => {
+      .then((socialAuthUser) => {
         // Create a user in your Firebase Realtime Database too
         return this.props.firebase.user(socialAuthUser.user.uid).set({
           username: socialAuthUser.additionalUserInfo.profile.name,
@@ -161,7 +105,7 @@ class SignInFacebookBase extends Component {
         this.setState({ error: null });
         this.props.history.push(ROUTES.HOME);
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
           error.message = ERROR_MSG_ACCOUNT_EXISTS;
         }
@@ -172,30 +116,10 @@ class SignInFacebookBase extends Component {
     event.preventDefault();
   };
 
-  render() {
-    const { error } = this.state;
-
-    return (
-      <form onSubmit={this.onSubmit}>
-        <button type="submit">Sign In with Facebook</button>
-
-        {error && <p>{error.message}</p>}
-      </form>
-    );
-  }
-}
-
-class SignInTwitterBase extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { error: null };
-  }
-
-  onSubmit = event => {
+  onSubmitTwitter = (event) => {
     this.props.firebase
       .doSignInWithTwitter()
-      .then(socialAuthUser => {
+      .then((socialAuthUser) => {
         // Create a user in your Firebase Realtime Database too
         return this.props.firebase.user(socialAuthUser.user.uid).set({
           username: socialAuthUser.additionalUserInfo.profile.name,
@@ -207,7 +131,7 @@ class SignInTwitterBase extends Component {
         this.setState({ error: null });
         this.props.history.push(ROUTES.HOME);
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
           error.message = ERROR_MSG_ACCOUNT_EXISTS;
         }
@@ -218,39 +142,129 @@ class SignInTwitterBase extends Component {
     event.preventDefault();
   };
 
+  onChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
   render() {
-    const { error } = this.state;
+    const {
+      email,
+      password,
+      error,
+      errorGoogle,
+      errorFb,
+      errorTwitter,
+    } = this.state;
 
+    const isInvalid = password === "" || email === "";
     return (
-      <form onSubmit={this.onSubmit}>
-        <button type="submit">Sign In with Twitter</button>
-
-        {error && <p>{error.message}</p>}
-      </form>
+      <MDBContainer>
+        <MDBRow>
+          <MDBCol md="3">
+          </MDBCol>
+          <MDBCol md="6">
+            <MDBCard>
+              <MDBCardBody className="mx-4">
+                <div className="text-center">
+                  <h3 className="dark-grey-text mb-5">
+                    <strong>Sign in</strong>
+                  </h3>
+                </div>
+                <MDBInput
+                  label="Your email"
+                  name="email"
+                  group
+                  type="email"
+                  validate
+                  value={email}
+                  onChange={this.onChange}
+                  error="wrong"
+                  success="right"
+                />
+                <MDBInput
+                  label="Your password"
+                  name="password"
+                  group
+                  type="password"
+                  value={password}
+                  onChange={this.onChange}
+                  validate
+                  containerClass="mb-0"
+                />
+                <p className="font-small blue-text d-flex justify-content-end pb-3">
+                  <Link to={ROUTES.PASSWORD_FORGET}>Forgot Password?</Link>
+                </p>
+                <div className="text-center mb-3">
+                  <MDBBtn
+                    type="button"
+                    gradient="blue"
+                    rounded
+                    disabled={isInvalid}
+                    onClick={this.onSubmit}
+                    className="btn-block z-depth-1a"
+                  >
+                    Sign in
+                  </MDBBtn>
+                  {error && <p>{error.message}</p>}
+                </div>
+                <p className="font-small dark-grey-text text-right d-flex justify-content-center mb-3 pt-2">
+                  or Sign in with:
+                </p>
+                <div className="row my-3 d-flex justify-content-center">
+                  <MDBBtn
+                    type="button"
+                    color="white"
+                    rounded
+                    onClick={this.onSubmitFb}
+                    className="mr-md-3 z-depth-1a"
+                  >
+                    <MDBIcon
+                      fab
+                      icon="facebook-f"
+                      className="blue-text text-center"
+                    />
+                  </MDBBtn>
+                  {errorFb && <p>{errorFb.message}</p>}
+                  <MDBBtn
+                    type="button"
+                    color="white"
+                    rounded
+                    onClick={this.onSubmitTwitter}
+                    className="mr-md-3 z-depth-1a"
+                  >
+                    <MDBIcon fab icon="twitter" className="blue-text" />
+                  </MDBBtn>
+                  {errorTwitter && <p>{errorTwitter.message}</p>}
+                  <MDBBtn
+                    type="button"
+                    color="white"
+                    rounded
+                    onClick={this.onSubmitGoogle}
+                    className="z-depth-1a"
+                  >
+                    <MDBIcon fab icon="google-plus-g" className="blue-text" />
+                  </MDBBtn>
+                  {errorGoogle && <p>{errorGoogle.message}</p>}
+                </div>
+              </MDBCardBody>
+              <MDBModalFooter className="mx-5 pt-3 mb-1">
+                <p className="font-small grey-text d-flex justify-content-end">
+                  Not a member?
+                  <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
+                </p>
+              </MDBModalFooter>
+            </MDBCard>
+          </MDBCol>
+          <MDBCol md="3"> 
+          </MDBCol>
+        </MDBRow>
+      </MDBContainer>
     );
   }
 }
 
-const SignInForm = compose(
-  withRouter,
-  withFirebase,
-)(SignInFormBase);
-
-const SignInGoogle = compose(
-  withRouter,
-  withFirebase,
-)(SignInGoogleBase);
-
-const SignInFacebook = compose(
-  withRouter,
-  withFirebase,
-)(SignInFacebookBase);
-
-const SignInTwitter = compose(
-  withRouter,
-  withFirebase,
-)(SignInTwitterBase);
+const SignInForm = compose(withRouter, withFirebase)(SignInFormBase);
 
 export default SignInPage;
 
-export { SignInForm, SignInGoogle, SignInFacebook, SignInTwitter };
+export { SignInForm };

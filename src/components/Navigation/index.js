@@ -1,52 +1,116 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React from "react";
+import { Link, Route } from "react-router-dom";
+import { connect } from "react-redux";
 
-import SignOutButton from '../SignOut';
-import * as ROUTES from '../../constants/routes';
-import * as ROLES from '../../constants/roles';
+import {
+  MDBNavbar,
+  MDBNavbarBrand,
+  MDBNavbarNav,
+  MDBNavbarToggler,
+  MDBCollapse,
+  MDBNavItem,
+  MDBNavLink,
+  MDBContainer,
+} from "mdbreact";
+import SignOutButton from "../SignOut";
+import * as ROUTES from "../../constants/routes";
+import * as ROLES from "../../constants/roles";
 
 const Navigation = ({ authUser }) =>
-  authUser ? (
-    <NavigationAuth authUser={authUser} />
-  ) : (
-    <NavigationNonAuth />
-  );
+  authUser ? <NavigationAuth authUser={authUser} /> : <NavigationNonAuth />;
 
-const NavigationAuth = ({ authUser }) => (
-  <ul>
-    <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.HOME}>Home</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.ACCOUNT}>Account</Link>
-    </li>
-    {!!authUser.roles[ROLES.ADMIN] && (
-      <li>
-        <Link to={ROUTES.ADMIN}>Admin</Link>
-      </li>
-    )}
-    <li>
-      <SignOutButton />
-    </li>
-  </ul>
-);
+class NavigationAuth extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapse: false,
+      isWideEnough: false,
+    };
+    this.onClick = this.onClick.bind(this);
+  }
 
-const NavigationNonAuth = () => (
-  <ul>
-    <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.SIGN_IN}>Sign In</Link>
-    </li>
-  </ul>
-);
+  onClick() {
+    this.setState({
+      collapse: !this.state.collapse,
+    });
+  }
 
-const mapStateToProps = state => ({
+  render() {
+    return (
+      <MDBNavbar color="blue" dark expand="md">
+        <MDBContainer>
+          <MDBNavbarBrand href="/">
+            <strong>Fisheries</strong>
+          </MDBNavbarBrand>
+          <MDBNavbarToggler onClick={this.onClick} />
+          <MDBCollapse isOpen={this.state.collapse} navbar>
+            <MDBNavbarNav right>
+              <MDBNavItem>
+                <MDBNavLink to={ROUTES.LANDING}>Home</MDBNavLink>
+              </MDBNavItem>
+              <MDBNavItem>
+                <MDBNavLink to={ROUTES.ACCOUNT}>Account</MDBNavLink>
+              </MDBNavItem>
+              {!!this.props.authUser.roles[ROLES.ADMIN] && (
+                <MDBNavItem >
+                  <MDBNavLink to={ROUTES.ADMIN}>Admin</MDBNavLink>
+                </MDBNavItem>
+              )}
+              <MDBNavItem>
+                <SignOutButton />
+              </MDBNavItem>
+            </MDBNavbarNav>
+          </MDBCollapse>
+        </MDBContainer>
+      </MDBNavbar>
+    );
+  }
+}
+
+class NavigationNonAuth extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapse: false,
+      isWideEnough: false,
+    };
+    this.onClick = this.onClick.bind(this);
+  }
+
+  onClick() {
+    this.setState({
+      collapse: !this.state.collapse,
+    });
+  }
+
+  render() {
+    return (
+      <MDBNavbar color="blue" dark expand="md">
+        <MDBContainer>
+          <MDBNavbarBrand href="/">
+            <strong>Fisheries</strong>
+          </MDBNavbarBrand>
+          <MDBNavbarToggler onClick={this.onClick} />
+          <MDBCollapse isOpen={this.state.collapse} navbar>
+            <MDBNavbarNav right>
+              <MDBNavItem>
+                <MDBNavLink to={ROUTES.LANDING}>Home</MDBNavLink>
+              </MDBNavItem>
+              <MDBNavItem>
+                <MDBNavLink to={ROUTES.SIGN_IN}>Sign In</MDBNavLink>
+              </MDBNavItem>
+              <MDBNavItem>
+                <MDBNavLink to={ROUTES.SIGN_UP}>Sign Up</MDBNavLink>
+              </MDBNavItem>
+            </MDBNavbarNav>
+          </MDBCollapse>
+        </MDBContainer>
+      </MDBNavbar>
+    );
+  }
+}
+
+const mapStateToProps = (state) => ({
   authUser: state.sessionState.authUser,
 });
 
