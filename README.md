@@ -1,3 +1,6 @@
+sudo firebase deploy --project fisheries-2c0cb
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
