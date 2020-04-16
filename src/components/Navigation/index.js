@@ -45,14 +45,14 @@ class NavigationAuth extends React.Component {
           <MDBCollapse isOpen={this.state.collapse} navbar>
             <MDBNavbarNav right>
               <MDBNavItem>
-                <MDBNavLink to={ROUTES.LANDING}>Home</MDBNavLink>
+                <MDBNavLink /*onClick={this.onClick}*/ to={ROUTES.HOME}>Home</MDBNavLink>
               </MDBNavItem>
               <MDBNavItem>
-                <MDBNavLink to={ROUTES.ACCOUNT}>Account</MDBNavLink>
+                <MDBNavLink /*onClick={this.onClick}*/ to={ROUTES.ACCOUNT}>Account</MDBNavLink>
               </MDBNavItem>
               {!!this.props.authUser.roles[ROLES.ADMIN] && (
                 <MDBNavItem >
-                  <MDBNavLink to={ROUTES.ADMIN}>Admin</MDBNavLink>
+                  <MDBNavLink /*onClick={this.onClick}*/ to={ROUTES.ADMIN}>Admin</MDBNavLink>
                 </MDBNavItem>
               )}
               <MDBNavItem>
@@ -93,13 +93,13 @@ class NavigationNonAuth extends React.Component {
           <MDBCollapse isOpen={this.state.collapse} navbar>
             <MDBNavbarNav right>
               <MDBNavItem>
-                <MDBNavLink to={ROUTES.LANDING}>Home</MDBNavLink>
+                <MDBNavLink /*onClick={this.onClick}*/ to={ROUTES.LANDING}>Home</MDBNavLink>
               </MDBNavItem>
               <MDBNavItem>
-                <MDBNavLink to={ROUTES.SIGN_IN}>Sign In</MDBNavLink>
+                <MDBNavLink /*onClick={this.onClick}*/ to={ROUTES.SIGN_IN}>Sign In</MDBNavLink>
               </MDBNavItem>
               <MDBNavItem>
-                <MDBNavLink to={ROUTES.SIGN_UP}>Sign Up</MDBNavLink>
+                <MDBNavLink /*onClick={this.onClick}*/ to={ROUTES.SIGN_UP}>Sign Up</MDBNavLink>
               </MDBNavItem>
             </MDBNavbarNav>
           </MDBCollapse>

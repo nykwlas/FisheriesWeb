@@ -1,0 +1,44 @@
+body {
+	background:#fff;
+}
+
+a.border.nav-link.border-light.rounded.mr-1 {
+  color: #3F729B;
+}
+
+a.border.nav-link.border-light.rounded.mr-1:hover {
+  color: #1C2331;
+}
+
+.btn.btn-sm.indigo:hover{
+  color: #fff;
+}
+
+/* .nav-link.active{
+  background-color: rgba(255, 255, 255, 0.1);
+} */
+
+#categories > .col-md-4.mb-5{
+  margin-bottom: 8rem !important;
+}
+/* .sectionPage {
+  position: relative;
+  top: -15px;
+  margin-bottom: -125px;
+} */
+
+.sectionPage::after {
+  content: '';
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/3/3a/A_day_of_fishing_aground.jpg');
+  background-position: center center;
+  background-size: cover;
+  filter: opacity(.5);
+}
+
+.images {
+    width: 350px;
+    height: 250px;
+}

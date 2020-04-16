@@ -42,13 +42,13 @@ class Firebase {
     this.auth.signInWithEmailAndPassword(email, password);
 
   doSignInWithGoogle = () =>
-    this.auth.signInWithRedirect(this.googleProvider);
+    this.auth.signInWithPopup(this.googleProvider);
 
   doSignInWithFacebook = () =>
-    this.auth.signInWithRedirect(this.facebookProvider);
+    this.auth.signInWithPopup(this.facebookProvider);
 
   doSignInWithTwitter = () =>
-    this.auth.signInWithRedirect(this.twitterProvider);
+    this.auth.signInWithPopup(this.twitterProvider);
 
   doSignOut = () => this.auth.signOut();
 

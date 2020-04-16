@@ -12,6 +12,7 @@ import AccountPage from "../Account";
 import AdminPage from "../Admin";
 import * as ROUTES from "../../constants/routes";
 import { withAuthentication } from "../Session";
+import UserGuidePage from "../UserGuide";
 
 const App = () => (
   <div>
@@ -21,6 +22,7 @@ const App = () => (
           <Route exact path={ROUTES.LANDING} component={LandingPage} />
           <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
           <Route path={ROUTES.TAC} component={TermsPage} />
+          <Route path={ROUTES.USER_GUIDE} component={UserGuidePage} />
           <Route path={ROUTES.SIGN_IN} component={SignInPage} />
           <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
           <Route path={ROUTES.HOME} component={HomePage} />
