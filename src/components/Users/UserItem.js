@@ -25,7 +25,6 @@ class UserItem extends Component {
           snapshot.val(),
           this.props.match.params.id,
         );
-
         this.setState({ loading: false });
       });
   }

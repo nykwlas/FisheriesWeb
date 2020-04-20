@@ -7,11 +7,6 @@ import {
   MDBRow,
   MDBCol,
   MDBBtn,
-  MDBIcon,
-  MDBCard,
-  MDBCardBody,
-  MDBInput,
-  MDBModalFooter,
 } from "mdbreact";
 import { withAuthorization, withEmailVerification } from "../Session";
 import { withFirebase } from "../Firebase";

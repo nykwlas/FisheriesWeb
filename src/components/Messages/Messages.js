@@ -19,7 +19,6 @@ class Messages extends Component {
     if (!this.props.messages.length) {
       this.setState({ loading: true });
     }
-
     this.onListenForMessages();
   }
 
@@ -29,18 +28,19 @@ class Messages extends Component {
     }
   }
 
+  
   onListenForMessages = () => {
     this.props.firebase
-      .messages()
-      .orderByChild('createdAt')
-      .limitToLast(this.props.limit)
-      .on('value', snapshot => {
-        this.props.onSetMessages(snapshot.val());
-
-        this.setState({ loading: false });
-      });
+    .messages()
+    .orderByChild('createdAt')
+    .limitToLast(this.props.limit)
+    .on('value', snapshot => {
+      this.props.onSetMessages(snapshot.val());
+      
+      this.setState({ loading: false });
+    });
   };
-
+  
   componentWillUnmount() {
     this.props.firebase.messages().off();
   }
@@ -53,6 +53,7 @@ class Messages extends Component {
     this.props.firebase.messages().push({
       text: this.state.text,
       userId: authUser.uid,
+      username: authUser.username,
       createdAt: this.props.firebase.serverValue.TIMESTAMP,
     });
 
@@ -82,7 +83,6 @@ class Messages extends Component {
   render() {
     const { messages } = this.props;
     const { text, loading } = this.state;
-
     return (
       <div>
         {!loading && messages && (
@@ -122,6 +122,7 @@ class Messages extends Component {
 }
 
 const mapStateToProps = state => ({
+
   authUser: state.sessionState.authUser,
   messages: Object.keys(state.messageState.messages || {}).map(
     key => ({
