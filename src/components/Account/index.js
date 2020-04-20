@@ -56,7 +56,7 @@ const AccountPage = ({ authUser }) => (
       <div>
         <h1 className="text-center my-5 font-weight-bold">Sign In Methods:</h1>
       </div>
-      <LoginManagement authUser={authUser}/>
+      <LoginManagement authUser={authUser} />
     </MDBContainer>
   </div>
 );
@@ -114,13 +114,13 @@ class LoginManagementBase extends Component {
     const { activeSignInMethods, error } = this.state;
 
     return (
-      <MDBRow style={{ paddingBottom: 30}}>
+      <MDBRow style={{ paddingBottom: 30 }}>
         {SIGN_IN_METHODS.map((signInMethod) => {
           const onlyOneLeft = activeSignInMethods.length === 1;
           const isEnabled = activeSignInMethods.includes(signInMethod.id);
 
           return signInMethod.id === "password" ? (
-            <MDBCol md="3">
+            <MDBCol md="3" style={{ paddingBottom: 30 }}>
               <DefaultLoginToggle
                 onlyOneLeft={onlyOneLeft}
                 isEnabled={isEnabled}
@@ -130,7 +130,7 @@ class LoginManagementBase extends Component {
               />
             </MDBCol>
           ) : (
-            <MDBCol md="3">
+            <MDBCol md="3" style={{ paddingBottom: 30 }}>
               <SocialLoginToggle
                 onlyOneLeft={onlyOneLeft}
                 isEnabled={isEnabled}
@@ -156,6 +156,7 @@ const SocialLoginToggle = ({
 }) =>
   isEnabled ? (
     <MDBBtn
+      block
       type="button"
       onClick={() => onUnlink(signInMethod.id)}
       disabled={onlyOneLeft}
@@ -163,7 +164,7 @@ const SocialLoginToggle = ({
       Deactivate {signInMethod.id}
     </MDBBtn>
   ) : (
-    <MDBBtn type="button" onClick={() => onLink(signInMethod.provider)}>
+    <MDBBtn block type="button" onClick={() => onLink(signInMethod.provider)}>
       Link {signInMethod.id}
     </MDBBtn>
   );
@@ -195,6 +196,7 @@ class DefaultLoginToggle extends Component {
 
     return isEnabled ? (
       <MDBBtn
+        block
         type="button"
         onClick={() => onUnlink(signInMethod.id)}
         disabled={onlyOneLeft}
@@ -218,7 +220,7 @@ class DefaultLoginToggle extends Component {
           placeholder="Confirm New Password"
         />
 
-        <MDBBtn disabled={isInvalid} type="submit">
+        <MDBBtn block disabled={isInvalid} type="submit">
           Link {signInMethod.id}
         </MDBBtn>
       </form>
