@@ -56,6 +56,49 @@ class PasswordForgetFormBase extends Component {
     const { email, error } = this.state;
 
     const isInvalid = email === "";
+    if (this.props.account === "true") {
+      return (
+        <MDBContainer>
+          <MDBRow>
+            <MDBCol>
+              <MDBCard>
+                <MDBCardBody className="mx-4">
+                  <div className="text-center">
+                    <h3 className="dark-grey-text">
+                      <strong>PasswordForget</strong>
+                    </h3>
+                  </div>
+                  <MDBInput
+                    name="email"
+                    label="Enter your email"
+                    value={email}
+                    onChange={this.onChange}
+                    group
+                    type="email"
+                    validate
+                  />
+                  <div className="text-center">
+                    <MDBBtn
+                      rounded
+                      onClick={this.onSubmit}
+                      disabled={isInvalid}
+                      outline
+                      color="info"
+                    >
+                      Send me reset email
+                      <MDBIcon far icon="paper-plane" className="ml-2" />
+                    </MDBBtn>
+                  </div>
+                  <div className="text-center">
+                    {error && <p>{error.message}</p>}
+                  </div>
+                </MDBCardBody>
+              </MDBCard>
+            </MDBCol>
+          </MDBRow>
+        </MDBContainer>
+      );
+    }
 
     return (
       <MDBContainer>

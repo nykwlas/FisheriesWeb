@@ -27,7 +27,7 @@ a.border.nav-link.border-light.rounded.mr-1:hover {
   margin-bottom: -125px;
 } */
 
-.sectionPage::after {
+/* .sectionPage::after {
   content: '';
   height: 100%;
   width: 100%;
@@ -36,7 +36,7 @@ a.border.nav-link.border-light.rounded.mr-1:hover {
   background-position: center center;
   background-size: cover;
   filter: opacity(.5);
-}
+} */
 
 .images {
     width: 350px;

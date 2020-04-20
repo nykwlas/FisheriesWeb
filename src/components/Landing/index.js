@@ -15,7 +15,6 @@ import {
   MDBCardTitle,
   MDBCardImage,
   MDBCardText,
-  MDBAnimation,
   MDBNavLink,
   MDBFooter,
 } from "mdbreact";
@@ -37,11 +36,6 @@ const Landing = () => {
               <MDBCardBody className="text-center">
                 <h2 className="h2-responsive mb-4">
                   <strong className="font-weight-bold">
-                    {/* <img
-                      src="https://mdbootstrap.com/img/Marketing/other/logo/logo-mdb-react-small.png"
-                      alt="mdbreact-logo"
-                      className="pr-2"
-                    /> */}
                     Fisheries Web
                   </strong>
                 </h2>
@@ -85,7 +79,6 @@ const Landing = () => {
               <hr className="my-5" />
               <MDBRow id="categories">
                 <MDBCol md="4">
-                  <MDBAnimation reveal type="fadeInLeft">
                     <MDBCard cascade className="my-3 grey lighten-4">
                       <MDBCardImage
                         cascade
@@ -112,10 +105,8 @@ const Landing = () => {
                         </MDBNavLink>
                       </MDBCardBody>
                     </MDBCard>
-                  </MDBAnimation>
                 </MDBCol>
                 <MDBCol md="4">
-                  <MDBAnimation reveal type="fadeInDown">
                     <MDBCard cascade className="my-3 grey lighten-4">
                       <MDBCardImage
                         cascade
@@ -139,10 +130,8 @@ const Landing = () => {
                         </MDBNavLink>
                       </MDBCardBody>
                     </MDBCard>
-                  </MDBAnimation>
                 </MDBCol>
                 <MDBCol md="4">
-                  <MDBAnimation reveal type="fadeInRight">
                     <MDBCard cascade className="my-3 grey lighten-4">
                       <MDBCardImage
                         cascade
@@ -170,7 +159,6 @@ const Landing = () => {
                         </MDBNavLink>
                       </MDBCardBody>
                     </MDBCard>
-                  </MDBAnimation>
                 </MDBCol>
               </MDBRow>
             </MDBCol>

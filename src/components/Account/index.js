@@ -1,36 +1,63 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { compose } from "recompose";
 
-import { withAuthorization, withEmailVerification } from '../Session';
-import { withFirebase } from '../Firebase';
-import { PasswordForgetForm } from '../PasswordForget';
-import PasswordChangeForm from '../PasswordChange';
+import {
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBBtn,
+  MDBIcon,
+  MDBCard,
+  MDBCardBody,
+  MDBInput,
+  MDBModalFooter,
+} from "mdbreact";
+import { withAuthorization, withEmailVerification } from "../Session";
+import { withFirebase } from "../Firebase";
+import { PasswordForgetForm } from "../PasswordForget";
+import PasswordChangeForm from "../PasswordChange";
 
 const SIGN_IN_METHODS = [
   {
-    id: 'password',
+    id: "password",
     provider: null,
   },
   {
-    id: 'google.com',
-    provider: 'googleProvider',
+    id: "google.com",
+    provider: "googleProvider",
   },
   {
-    id: 'facebook.com',
-    provider: 'facebookProvider',
+    id: "facebook.com",
+    provider: "facebookProvider",
   },
   {
-    id: 'twitter.com',
-    provider: 'twitterProvider',
+    id: "twitter.com",
+    provider: "twitterProvider",
   },
 ];
 
 const AccountPage = ({ authUser }) => (
   <div>
-    <h1>Account: {authUser.email}</h1>
-    <PasswordChangeForm />
-    <LoginManagement authUser={authUser} />
+    <h1 className="text-center my-5 font-weight-bold">
+      Account: {authUser.email}
+    </h1>
+    <MDBContainer>
+      <MDBRow>
+        <MDBCol md="1"></MDBCol>
+        <MDBCol md="5" style={{ paddingBottom: 30, paddingTop: 30 }}>
+          <PasswordChangeForm />
+        </MDBCol>
+        <MDBCol md="1"></MDBCol>
+        <MDBCol md="5" style={{ paddingBottom: 30, paddingTop: 30 }}>
+          <PasswordForgetForm account="true" />
+        </MDBCol>
+      </MDBRow>
+      <div>
+        <h1 className="text-center my-5 font-weight-bold">Sign In Methods:</h1>
+      </div>
+      <LoginManagement authUser={authUser}/>
+    </MDBContainer>
   </div>
 );
 
@@ -51,76 +78,71 @@ class LoginManagementBase extends Component {
   fetchSignInMethods = () => {
     this.props.firebase.auth
       .fetchSignInMethodsForEmail(this.props.authUser.email)
-      .then(activeSignInMethods =>
-        this.setState({ activeSignInMethods, error: null }),
+      .then((activeSignInMethods) =>
+        this.setState({ activeSignInMethods, error: null })
       )
-      .catch(error => this.setState({ error }));
+      .catch((error) => this.setState({ error }));
   };
 
-  onSocialLoginLink = provider => {
+  onSocialLoginLink = (provider) => {
     this.props.firebase.auth.currentUser
       .linkWithPopup(this.props.firebase[provider])
       .then(this.fetchSignInMethods)
-      .catch(error => this.setState({ error }));
+      .catch((error) => this.setState({ error }));
   };
 
-  onDefaultLoginLink = password => {
+  onDefaultLoginLink = (password) => {
     const credential = this.props.firebase.emailAuthProvider.credential(
       this.props.authUser.email,
-      password,
+      password
     );
 
     this.props.firebase.auth.currentUser
       .linkAndRetrieveDataWithCredential(credential)
       .then(this.fetchSignInMethods)
-      .catch(error => this.setState({ error }));
+      .catch((error) => this.setState({ error }));
   };
 
-  onUnlink = providerId => {
+  onUnlink = (providerId) => {
     this.props.firebase.auth.currentUser
       .unlink(providerId)
       .then(this.fetchSignInMethods)
-      .catch(error => this.setState({ error }));
+      .catch((error) => this.setState({ error }));
   };
 
   render() {
     const { activeSignInMethods, error } = this.state;
 
     return (
-      <div>
-        Sign In Methods:
-        <ul>
-          {SIGN_IN_METHODS.map(signInMethod => {
-            const onlyOneLeft = activeSignInMethods.length === 1;
-            const isEnabled = activeSignInMethods.includes(
-              signInMethod.id,
-            );
+      <MDBRow style={{ paddingBottom: 30}}>
+        {SIGN_IN_METHODS.map((signInMethod) => {
+          const onlyOneLeft = activeSignInMethods.length === 1;
+          const isEnabled = activeSignInMethods.includes(signInMethod.id);
 
-            return (
-              <li key={signInMethod.id}>
-                {signInMethod.id === 'password' ? (
-                  <DefaultLoginToggle
-                    onlyOneLeft={onlyOneLeft}
-                    isEnabled={isEnabled}
-                    signInMethod={signInMethod}
-                    onLink={this.onDefaultLoginLink}
-                    onUnlink={this.onUnlink}
-                  />
-                ) : (
-                  <SocialLoginToggle
-                    onlyOneLeft={onlyOneLeft}
-                    isEnabled={isEnabled}
-                    signInMethod={signInMethod}
-                    onLink={this.onSocialLoginLink}
-                    onUnlink={this.onUnlink}
-                  />
-                )}
-              </li>
-            );
-          })}
-        </ul>
+          return signInMethod.id === "password" ? (
+            <MDBCol md="3">
+              <DefaultLoginToggle
+                onlyOneLeft={onlyOneLeft}
+                isEnabled={isEnabled}
+                signInMethod={signInMethod}
+                onLink={this.onDefaultLoginLink}
+                onUnlink={this.onUnlink}
+              />
+            </MDBCol>
+          ) : (
+            <MDBCol md="3">
+              <SocialLoginToggle
+                onlyOneLeft={onlyOneLeft}
+                isEnabled={isEnabled}
+                signInMethod={signInMethod}
+                onLink={this.onSocialLoginLink}
+                onUnlink={this.onUnlink}
+              />
+            </MDBCol>
+          );
+        })}
         {error && error.message}
-      </div>
+      </MDBRow>
     );
   }
 }
@@ -133,61 +155,52 @@ const SocialLoginToggle = ({
   onUnlink,
 }) =>
   isEnabled ? (
-    <button
+    <MDBBtn
       type="button"
       onClick={() => onUnlink(signInMethod.id)}
       disabled={onlyOneLeft}
     >
       Deactivate {signInMethod.id}
-    </button>
+    </MDBBtn>
   ) : (
-    <button
-      type="button"
-      onClick={() => onLink(signInMethod.provider)}
-    >
+    <MDBBtn type="button" onClick={() => onLink(signInMethod.provider)}>
       Link {signInMethod.id}
-    </button>
+    </MDBBtn>
   );
 
 class DefaultLoginToggle extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { passwordOne: '', passwordTwo: '' };
+    this.state = { passwordOne: "", passwordTwo: "" };
   }
 
-  onSubmit = event => {
+  onSubmit = (event) => {
     event.preventDefault();
 
     this.props.onLink(this.state.passwordOne);
-    this.setState({ passwordOne: '', passwordTwo: '' });
+    this.setState({ passwordOne: "", passwordTwo: "" });
   };
 
-  onChange = event => {
+  onChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
   render() {
-    const {
-      onlyOneLeft,
-      isEnabled,
-      signInMethod,
-      onUnlink,
-    } = this.props;
+    const { onlyOneLeft, isEnabled, signInMethod, onUnlink } = this.props;
 
     const { passwordOne, passwordTwo } = this.state;
 
-    const isInvalid =
-      passwordOne !== passwordTwo || passwordOne === '';
+    const isInvalid = passwordOne !== passwordTwo || passwordOne === "";
 
     return isEnabled ? (
-      <button
+      <MDBBtn
         type="button"
         onClick={() => onUnlink(signInMethod.id)}
         disabled={onlyOneLeft}
       >
         Deactivate {signInMethod.id}
-      </button>
+      </MDBBtn>
     ) : (
       <form onSubmit={this.onSubmit}>
         <input
@@ -205,9 +218,9 @@ class DefaultLoginToggle extends Component {
           placeholder="Confirm New Password"
         />
 
-        <button disabled={isInvalid} type="submit">
+        <MDBBtn disabled={isInvalid} type="submit">
           Link {signInMethod.id}
-        </button>
+        </MDBBtn>
       </form>
     );
   }
@@ -215,14 +228,14 @@ class DefaultLoginToggle extends Component {
 
 const LoginManagement = withFirebase(LoginManagementBase);
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   authUser: state.sessionState.authUser,
 });
 
-const condition = authUser => !!authUser;
+const condition = (authUser) => !!authUser;
 
 export default compose(
   connect(mapStateToProps),
   withEmailVerification,
-  withAuthorization(condition),
+  withAuthorization(condition)
 )(AccountPage);
