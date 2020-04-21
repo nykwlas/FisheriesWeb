@@ -1,21 +1,86 @@
-import React from 'react';
-import { compose } from 'recompose';
+import React, { Component } from "react";
+import { compose } from "recompose";
 
-import { withAuthorization, withEmailVerification } from '../Session';
-import Messages from '../Messages';
+import {
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBListGroup,
+  MDBListGroupItem,
+} from "mdbreact";
 
-const HomePage = () => (
-  <div>
-    <h1>Home Page</h1>
-    <p>The Home Page is accessible by every signed in user.</p>
+import { withAuthorization, withEmailVerification } from "../Session";
+import Messages from "../Messages";
 
-    <Messages />
-  </div>
-);
+class HomePage extends Component {
+  constructor(props) {
+    super(props);
 
-const condition = authUser => !!authUser;
+    this.state = {
+      room: "spearfishing",
+    };
+  }
+
+  onListSpearfishing = () => {
+    this.setState({ room: "spearfishing" });
+  };
+
+  onListFences = () => {
+    this.setState({ room: "fences" });
+  };
+
+  onListBoat = () => {
+    this.setState({ room: "boat" });
+  };
+
+  render() {
+    const { room } = this.state;
+    return (
+      <div>
+        <h1 className="ml-3 font-weight-bold">Rooms</h1>
+        <MDBContainer className="m-1">
+          <MDBRow>
+            <MDBCol md="4" className="d-flex">
+              <MDBListGroup style={{ width: "22rem" }}>
+                <p onClick={this.onListSpearfishing}>
+                  <MDBListGroupItem
+                    href="#spearfishing"
+                    active={room === "spearfishing"}
+                  >
+                    Spearfishing
+                  </MDBListGroupItem>
+                </p>
+                <p onClick={this.onListFences}>
+                  <MDBListGroupItem
+                    href="#fences"
+                    active={room === "fences"}
+                  >
+                    Fences
+                  </MDBListGroupItem>
+                </p>
+                <p onClick={this.onListBoat}>
+                  <MDBListGroupItem
+                    href="#boat"
+                    active={room === "boat"}
+                  >
+                    Boat
+                  </MDBListGroupItem>
+                </p>
+              </MDBListGroup>
+            </MDBCol>
+            <MDBCol md="8">
+              <Messages room={room} />
+            </MDBCol>
+          </MDBRow>
+        </MDBContainer>
+      </div>
+    );
+  }
+}
+
+const condition = (authUser) => !!authUser;
 
 export default compose(
   withEmailVerification,
-  withAuthorization(condition),
+  withAuthorization(condition)
 )(HomePage);

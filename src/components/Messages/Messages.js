@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
-
-import { withFirebase } from '../Firebase';
-import MessageList from './MessageList';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { compose } from "recompose";
+import { MDBBtn } from "mdbreact";
+import { withFirebase } from "../Firebase";
+import MessageList from "./MessageList";
+import "./index.css";
 
 class Messages extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      text: '',
+      text: "",
       loading: false,
     };
   }
@@ -23,41 +24,41 @@ class Messages extends Component {
   }
 
   componentDidUpdate(props) {
-    if (props.limit !== this.props.limit) {
+    if (props.limit !== this.props.limit || props.room !== this.props.room) {
       this.onListenForMessages();
     }
   }
 
-  
   onListenForMessages = () => {
     this.props.firebase
-    .messages()
-    .orderByChild('createdAt')
-    .limitToLast(this.props.limit)
-    .on('value', snapshot => {
-      this.props.onSetMessages(snapshot.val());
-      
-      this.setState({ loading: false });
-    });
+      .messages(this.props.room)
+      .orderByChild("createdAt")
+      .limitToLast(this.props.limit)
+      .on("value", (snapshot) => {
+        console.log(snapshot.val());
+        this.props.onSetMessages(snapshot.val());
+
+        this.setState({ loading: false });
+      });
   };
-  
+
   componentWillUnmount() {
-    this.props.firebase.messages().off();
+    this.props.firebase.messages(this.props.room).off();
   }
 
-  onChangeText = event => {
+  onChangeText = (event) => {
     this.setState({ text: event.target.value });
   };
 
   onCreateMessage = (event, authUser) => {
-    this.props.firebase.messages().push({
+    this.props.firebase.messages(this.props.room).push({
       text: this.state.text,
       userId: authUser.uid,
       username: authUser.username,
       createdAt: this.props.firebase.serverValue.TIMESTAMP,
     });
 
-    this.setState({ text: '' });
+    this.setState({ text: "" });
 
     event.preventDefault();
   };
@@ -65,15 +66,15 @@ class Messages extends Component {
   onEditMessage = (message, text) => {
     const { uid, ...messageSnapshot } = message;
 
-    this.props.firebase.message(message.uid).set({
+    this.props.firebase.message(this.props.room, message.uid).set({
       ...messageSnapshot,
       text,
       editedAt: this.props.firebase.serverValue.TIMESTAMP,
     });
   };
 
-  onRemoveMessage = uid => {
-    this.props.firebase.message(uid).remove();
+  onRemoveMessage = (uid) => {
+    this.props.firebase.message(this.props.room, uid).remove();
   };
 
   onNextPage = () => {
@@ -84,66 +85,66 @@ class Messages extends Component {
     const { messages } = this.props;
     const { text, loading } = this.state;
     return (
-      <div>
+      <div className="">
         {!loading && messages && (
           <button type="button" onClick={this.onNextPage}>
             More
           </button>
         )}
-
-        {loading && <div>Loading ...</div>}
-
-        {messages && (
-          <MessageList
-            authUser={this.props.authUser}
-            messages={messages}
-            onEditMessage={this.onEditMessage}
-            onRemoveMessage={this.onRemoveMessage}
-          />
-        )}
-
+        <div className="scrollable">
+          {loading && <div>Loading ...</div>}
+          {messages && (
+            <MessageList
+              authUser={this.props.authUser}
+              messages={messages}
+              onEditMessage={this.onEditMessage}
+              onRemoveMessage={this.onRemoveMessage}
+            />
+          )}
+        </div>
         {!messages && <div>There are no messages ...</div>}
-
-        <form
-          onSubmit={event =>
-            this.onCreateMessage(event, this.props.authUser)
-          }
-        >
-          <input
+        <div className="compose">
+          <textarea
             type="text"
             value={text}
             onChange={this.onChangeText}
+            className="form-control pl-2 my-0 compose-input"
+            rows="1"
+            placeholder="Type your message here..."
           />
-          <button type="submit">Send</button>
-        </form>
+          <MDBBtn
+            onClick={(event) =>
+              this.onCreateMessage(event, this.props.authUser)
+            }
+            color="info"
+            rounded
+            size="sm"
+            className="buttonSend"
+          >
+            Send
+          </MDBBtn>
+        </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
-
+const mapStateToProps = (state) => ({
   authUser: state.sessionState.authUser,
-  messages: Object.keys(state.messageState.messages || {}).map(
-    key => ({
-      ...state.messageState.messages[key],
-      uid: key,
-    }),
-  ),
+  messages: Object.keys(state.messageState.messages || {}).map((key) => ({
+    ...state.messageState.messages[key],
+    uid: key,
+  })),
   limit: state.messageState.limit,
 });
 
-const mapDispatchToProps = dispatch => ({
-  onSetMessages: messages =>
-    dispatch({ type: 'MESSAGES_SET', messages }),
-  onSetMessagesLimit: limit =>
-    dispatch({ type: 'MESSAGES_LIMIT_SET', limit }),
+const mapDispatchToProps = (dispatch) => ({
+  onSetMessages: (messages) => dispatch({ type: "MESSAGES_SET", messages }),
+  onSetMessagesLimit: (limit) =>
+    dispatch({ type: "MESSAGES_LIMIT_SET", limit }),
 });
 
 export default compose(
   withFirebase,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
+  connect(mapStateToProps, mapDispatchToProps)
 )(Messages);

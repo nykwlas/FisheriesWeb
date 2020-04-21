@@ -1,0 +1,38 @@
+.compose {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-top: 1px solid rgb(189, 180, 180);
+  position: fixed;
+  width: calc(70% - 20px);
+  bottom: 0px;
+}
+@media only screen and (max-width: 600px) {
+  .compose {
+    width: calc(100% - 20px);
+  }
+}
+
+.buttonSend {
+  width: 80px;
+}
+
+.compose-input {
+  flex: 1;
+  border: none;
+  font-size: 14px;
+  height: 40px;
+  background: none;
+}
+
+.compose-input::placeholder {
+  opacity: 0.6;
+}
+
+.scrollable {
+  position: absolute;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 70px;
+}
