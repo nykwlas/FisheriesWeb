@@ -20,7 +20,6 @@
 
 .compose-input {
   flex: 1;
-  border: none;
   font-size: 14px;
   height: 40px;
   background: none;
@@ -31,8 +30,24 @@
 }
 
 .scrollable {
-  position: absolute;
+  position: fixed;
+  width: 100%;
+  margin-top: 10px;
   overflow-y: scroll;
+  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: 70px;
+  bottom: 60px;
+  top: 140px;
+}
+
+@media only screen and (max-width: 768px) {
+  .scrollable {
+    top: 340px;
+  }
+}
+
+.message {
+  border-left: 0 none;
+  border-right: 0 none;
+  line-height: 1.5rem;
 }

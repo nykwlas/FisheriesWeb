@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-
+import React, { Component } from "react";
+import { MDBListGroupItem } from "mdbreact";
 class MessageItem extends Component {
   constructor(props) {
     super(props);
@@ -11,13 +11,13 @@ class MessageItem extends Component {
   }
 
   onToggleEditMode = () => {
-    this.setState(state => ({
+    this.setState((state) => ({
       editMode: !state.editMode,
       editText: this.props.message.text,
     }));
   };
 
-  onChangeEditText = event => {
+  onChangeEditText = (event) => {
     this.setState({ editText: event.target.value });
   };
 
@@ -32,7 +32,7 @@ class MessageItem extends Component {
     const { editMode, editText } = this.state;
 
     return (
-      <li>
+      <MDBListGroupItem className="message">
         {editMode ? (
           <input
             type="text"
@@ -40,10 +40,13 @@ class MessageItem extends Component {
             onChange={this.onChangeEditText}
           />
         ) : (
-          <span>
-            <strong>{message.username}</strong> {message.text}
-            {message.editedAt && <span>(Edited)</span>}
-          </span>
+          <div>
+            <div className="d-flex w-100 justify-content-between">
+              <strong>{message.username}</strong>
+              <small>3 days ago</small>
+            </div>
+            <p className="mb-1">{message.text} {message.editedAt && <span>(Edited)</span>}</p>
+          </div>
         )}
 
         {authUser.uid === message.userId && (
@@ -67,7 +70,7 @@ class MessageItem extends Component {
             )}
           </span>
         )}
-      </li>
+      </MDBListGroupItem>
     );
   }
 }

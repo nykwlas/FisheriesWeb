@@ -1,5 +1,5 @@
 import React from "react";
-
+import { MDBListGroup } from "mdbreact";
 import MessageItem from "./MessageItem";
 
 const MessageList = ({
@@ -9,7 +9,7 @@ const MessageList = ({
   onRemoveMessage,
 }) => {
   return (
-    <ul>
+    <MDBListGroup style={{ width: "68%" }}>
       {messages.map((message) => (
         <MessageItem
           authUser={authUser}
@@ -19,7 +19,7 @@ const MessageList = ({
           onRemoveMessage={onRemoveMessage}
         />
       ))}
-    </ul>
+    </MDBListGroup>
   );
 };
 

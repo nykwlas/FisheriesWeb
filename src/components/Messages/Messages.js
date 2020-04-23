@@ -35,7 +35,6 @@ class Messages extends Component {
       .orderByChild("createdAt")
       .limitToLast(this.props.limit)
       .on("value", (snapshot) => {
-        console.log(snapshot.val());
         this.props.onSetMessages(snapshot.val());
 
         this.setState({ loading: false });

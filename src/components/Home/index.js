@@ -51,18 +51,12 @@ class HomePage extends Component {
                   </MDBListGroupItem>
                 </p>
                 <p onClick={this.onListFences}>
-                  <MDBListGroupItem
-                    href="#fences"
-                    active={room === "fences"}
-                  >
+                  <MDBListGroupItem href="#fences" active={room === "fences"}>
                     Fences
                   </MDBListGroupItem>
                 </p>
                 <p onClick={this.onListBoat}>
-                  <MDBListGroupItem
-                    href="#boat"
-                    active={room === "boat"}
-                  >
+                  <MDBListGroupItem href="#boat" active={room === "boat"}>
                     Boat
                   </MDBListGroupItem>
                 </p>
