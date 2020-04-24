@@ -32,17 +32,17 @@
 .scrollable {
   position: fixed;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 30px;
   overflow-y: scroll;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   bottom: 60px;
-  top: 140px;
+  top: 50px;
 }
 
 @media only screen and (max-width: 768px) {
   .scrollable {
-    top: 340px;
+    top: 270px;
   }
 }
 
@@ -50,4 +50,8 @@
   border-left: 0 none;
   border-right: 0 none;
   line-height: 1.5rem;
+}
+
+.msgText {
+  white-space: pre-wrap;
 }

@@ -12,6 +12,7 @@ class Messages extends Component {
 
     this.state = {
       text: "",
+      isEmpty: true,
       loading: false,
     };
   }
@@ -47,6 +48,12 @@ class Messages extends Component {
 
   onChangeText = (event) => {
     this.setState({ text: event.target.value });
+    if (event.target.value.trim().length) {
+      this.setState({ isEmpty: false });
+    }
+    else {
+      this.setState({ isEmpty: true });
+    }
   };
 
   onCreateMessage = (event, authUser) => {
@@ -57,7 +64,7 @@ class Messages extends Component {
       createdAt: this.props.firebase.serverValue.TIMESTAMP,
     });
 
-    this.setState({ text: "" });
+    this.setState({ text: "" , isEmpty: true});
 
     event.preventDefault();
   };
@@ -80,16 +87,18 @@ class Messages extends Component {
     this.props.onSetMessagesLimit(this.props.limit + 5);
   };
 
+  // onEnterPress = (e) => {
+  //   if (e.keyCode === 13 && e.shiftKey === false) {
+  //     e.preventDefault();
+  //     this.onCreateMessage(e, this.props.authUser)
+  //   }
+  // };
+
   render() {
     const { messages } = this.props;
     const { text, loading } = this.state;
     return (
       <div className="">
-        {!loading && messages && (
-          <button type="button" onClick={this.onNextPage}>
-            More
-          </button>
-        )}
         <div className="scrollable">
           {loading && <div>Loading ...</div>}
           {messages && (
@@ -107,6 +116,7 @@ class Messages extends Component {
             type="text"
             value={text}
             onChange={this.onChangeText}
+            // onKeyDown={this.onEnterPress}
             className="form-control pl-2 my-0 compose-input"
             rows="1"
             placeholder="Type your message here..."
@@ -116,12 +126,18 @@ class Messages extends Component {
               this.onCreateMessage(event, this.props.authUser)
             }
             color="info"
+            disabled={this.state.isEmpty}
             rounded
             size="sm"
             className="buttonSend"
           >
             Send
           </MDBBtn>
+          {!loading && messages && (
+            <MDBBtn className="float-right" size="sm" onClick={this.onNextPage}>
+              More
+            </MDBBtn>
+          )}
         </div>
       </div>
     );
